@@ -2,24 +2,53 @@
 <html lang="zh-TW">
 <head>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* 將 Google 表單的白色背景轉為深色風格 */
-        iframe { filter: invert(90%) hue-rotate(180deg) brightness(0.8); }
-    </style>
 </head>
-<body class="bg-gray-950 p-6 min-h-screen flex flex-col items-center">
-    
-    <div class="max-w-2xl w-full space-y-6">
-        <h1 class="text-2xl font-black text-white tracking-tighter text-center">誠實豆沙包 (表單版)</h1>
+<body class="bg-gray-950 min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-sm bg-gray-900 p-8 rounded-3xl border border-gray-800 shadow-2xl">
+        <h1 class="text-white text-2xl font-black mb-6 text-center tracking-tighter">誠實豆沙包</h1>
         
-        <div class="bg-gray-900 rounded-3xl border border-gray-800 shadow-2xl overflow-hidden">
-            <iframe 
-                src="https://docs.google.com/forms/d/e/1FAIpQLSdsp2Iy0DPVT7MmzcBt3k61DUSribV01Yo1bMidf9zUf0oZ8g/viewform?usp=pp_url&entry.1377718563=56&entry.1180654692=%E4%BD%8E&entry.216472788=595" 
-                width="100%" 
-                height="800px" 
-                frameborder="0">
-            </iframe>
-        </div>
+        <form id="truthForm" class="space-y-4">
+            <input type="text" name="entry.1377718563" placeholder="標題" required 
+                class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:border-red-600 outline-none">
+            
+            <select name="entry.1180654692" 
+                class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-gray-400 focus:border-red-600 outline-none">
+                <option value="低">嚴重度：低</option>
+                <option value="中">嚴重度：中</option>
+                <option value="高">嚴重度：高</option>
+                <option value="緊急">嚴重度：緊急</option>
+            </select>
+
+            <textarea name="entry.216472788" placeholder="輸入錯誤代碼或真相..." required 
+                class="w-full h-32 bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:border-red-600 outline-none"></textarea>
+            
+            <button type="submit" id="submitBtn"
+                class="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-900/20">
+                發送回報
+            </button>
+        </form>
     </div>
+
+    <script>
+        const form = document.getElementById('truthForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "發送中...";
+            btn.disabled = true;
+
+            // 直接發送至您的 formResponse 連結
+            await fetch('https://docs.google.com/forms/d/e/1FAIpQLSdsp2Iy0DPVT7MmzcBt3k61DUSribV01Yo1bMidf9zUf0oZ8g/formResponse', {
+                method: 'POST',
+                mode: 'no-cors',
+                body: new FormData(form)
+            });
+
+            alert('真相已送達。');
+            form.reset();
+            btn.innerText = "發送回報";
+            btn.disabled = false;
+        });
+    </script>
 </body>
 </html>
