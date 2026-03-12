@@ -1,38 +1,50 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+    <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 p-6">
     <div class="max-w-4xl mx-auto space-y-8">
-        <div class="bg-white p-6 rounded-xl shadow-md">
-            <h1 class="text-xl font-bold mb-4">回報新錯誤</h1>
-            <form id="bugForm" action="https://github.com/您的帳號/您的倉庫名稱/issues/new" method="GET" class="space-y-3">
-                <input type="text" name="title" placeholder="錯誤標題" class="w-full border p-2 rounded">
-                <textarea name="body" placeholder="錯誤說明與正確代碼..." class="w-full border p-2 rounded h-24"></textarea>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">提交至 GitHub</button>
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <h1 class="text-xl font-bold mb-4 text-blue-600">程式錯誤回報系統</h1>
+            <form id="bugForm" action="https://github.com/pengjun0429/bug-report/issues/new" method="GET" class="space-y-3">
+                <input type="text" name="title" placeholder="請輸入錯誤標題" class="w-full border p-2 rounded focus:ring-2 focus:ring-blue-400" required>
+                <textarea name="body" placeholder="請詳細說明錯誤情況與正確程式碼..." class="w-full border p-2 rounded h-24 focus:ring-2 focus:ring-blue-400" required></textarea>
+                <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">提交至 GitHub Issue</button>
             </form>
         </div>
 
-        <div class="bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-xl font-bold mb-4">已回報的錯誤列表</h2>
-            <div id="issueList" class="divide-y">
-                <p class="text-gray-500">正在讀取錯誤列表...</p>
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <h2 class="text-xl font-bold mb-4 text-gray-700">歷史錯誤清單</h2>
+            <div id="issueList" class="divide-y divide-gray-100">
+                <p class="text-gray-500 py-4 italic">正在從 GitHub 載入您的錯誤回報...</p>
             </div>
         </div>
     </div>
 
     <script>
         async function fetchIssues() {
-            const res = await fetch('https://api.github.com/repos/您的帳號/您的倉庫名稱/issues');
-            const issues = await res.json();
-            const list = document.getElementById('issueList');
-            list.innerHTML = issues.map(issue => `
-                <div class="py-3">
-                    <h3 class="font-semibold">${issue.title}</h3>
-                    <p class="text-sm text-gray-600">${issue.body.substring(0, 100)}...</p>
-                </div>
-            `).join('');
+            try {
+                const res = await fetch('https://api.github.com/repos/pengjun0429/bug-report/issues');
+                const issues = await res.json();
+                const list = document.getElementById('issueList');
+                
+                if (issues.length === 0) {
+                    list.innerHTML = '<p class="text-gray-500 py-4">目前沒有任何錯誤回報。</p>';
+                    return;
+                }
+
+                list.innerHTML = issues.map(issue => `
+                    <div class="py-4">
+                        <h3 class="font-bold text-gray-800">${issue.title}</h3>
+                        <p class="text-sm text-gray-600 mt-1">${issue.body ? issue.body.substring(0, 150) : '無詳細描述'}...</p>
+                        <a href="${issue.html_url}" target="_blank" class="text-blue-500 text-xs mt-2 block hover:underline">查看詳細內容 →</a>
+                    </div>
+                `).join('');
+            } catch (err) {
+                document.getElementById('issueList').innerHTML = '<p class="text-red-500">載入失敗，請檢查網路或 API 限制。</p>';
+            }
         }
         fetchIssues();
     </script>
