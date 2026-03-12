@@ -1,0 +1,22 @@
+name: 搬運資料到 Google Sheets
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 寫入試算表
+        uses: jasonit/google-sheets-action@v2
+        with:
+          spreadsheetId: ${{ secrets.GSHEET_ID }}
+          credentials: ${{ secrets.GSHEET_CREDENTIALS }}
+          range: "Sheet1!A:F"
+          values: |
+            [[ 
+              "${{ github.event.issue.created_at }}", 
+              "${{ github.event.issue.user.login }}", 
+              "${{ github.event.issue.title }}",
+              "${{ github.event.issue.body }}" 
+            ]]
