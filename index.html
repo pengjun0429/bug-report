@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+  <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">程式錯誤回報系統</h1>
+    <form id="bugForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">錯誤主題</label>
+        <input type="text" id="title" class="w-full border rounded p-2 focus:ring-2 focus:ring-blue-400">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">嚴重程度</label>
+        <select id="severity" class="w-full border rounded p-2">
+          <option>低</option><option>中</option><option>高</option><option>緊急</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium">正確程式碼</label>
+        <textarea id="code" class="w-full border rounded p-2 h-32 font-mono text-sm"></textarea>
+      </div>
+      <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">提交報告</button>
+    </form>
+  </div>
+</body>
+</html>
