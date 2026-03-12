@@ -1,0 +1,25 @@
+name: 程式錯誤回報
+description: 請提供錯誤細節與修正代碼
+body:
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 嚴重程度
+      options: ["低", "中", "高", "緊急"]
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 錯誤描述
+      placeholder: 說明發生了什麼問題...
+    validations:
+      required: true
+  - type: textarea
+    id: fixed_code
+    attributes:
+      label: 正確的程式碼
+      description: 請在此貼上修正後的程式碼
+      render: python
+    validations:
+      required: true
